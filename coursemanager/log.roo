@@ -1,0 +1,83 @@
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log opened at 2014-01-28 17:59:46
+project --topLevelPackage org.rooinaction.coursemanager --projectName coursemanager --java 7 --packaging JAR
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log closed at 2014-01-28 17:59:49
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log opened at 2014-01-28 17:59:53
+jpa setup --database HYPERSONIC_PERSISTENT --provider HIBERNATE
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log closed at 2014-01-28 18:03:03
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log opened at 2014-01-29 15:35:44
+jpa setup --provider HIBERNATE --database HYPERSONIC_PERSISTENT 
+properties list --name database.properties --path SPRING_CONFIG_ROOT
+properties set --name database.properties --path SPRING_CONFIG_ROOT --key password --value f00b@r 
+properties remove  --name database.properties --path SPRING_CONFIG_ROOT --key password
+entity jpa --class ~.model.Course --abstract false --testAutomatically true --mappedSuperclass false --equals false --serializable false --permitReservedWords false --activeRecord false 
+entity jpa --class ~.model.Course --testAutomatically true
+field string --fieldName name
+field number --fieldName listPrice --type java.math.BigDecimal
+field string --fieldName description
+field number --fieldName maximumCapacity --type java.lang.Integer
+field date --fieldName runDate --type java.util.Date --persistenceType JPA_DATE --dateFormat SHORT
+enum type --class ~.model.CourseTypeEnum
+enum constant --name SEMINAR
+enum constant --name CREDIT
+enum constant --name CONTINUING_EDUCATION
+focus --class ~.model.Course
+field enum --fieldName courseType --type ~.model.CourseTypeEnum --enumType STRING
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log closed at 2014-01-30 10:37:23
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log opened at 2014-01-30 17:53:32
+focus --class org.rooinaction.coursemanager.model.Course 
+field string --fieldName name --sizeMin 1 --sizeMax 60 --column course_name
+field string --fieldName description --notNull --sizeMax 1000
+field number --fieldName listPrice --type java.math.BigDecimal --decimalMin 0.0 --decimalMax 99999.99 --digitsFraction 2 --digitsInteger 5 --notNull
+field number --fieldName maximumCapacity --type java.lang.Integer --min 1 --max 9999 --notNull --column max_capacity
+field date --fieldName runDate --type java.util.Date --dateTimeFormatPattern MM/dd/yyyy
+field enum --fieldName courseType --type ~.model.CourseTypeEnum --enumType STRING --notNull
+finder list --filter name
+finder add --finderName findCoursesByNameLike 
+finder list --depth 2 --filter courseType,runDate
+finder add --finderName findCoursesByCourseTypeAndRunDateBetween
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log closed at 2014-01-30 18:50:44
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log opened at 2014-01-31 15:15:24
+repository jpa --interface ~.db.CourseRepository --entity ~.model.Course
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log closed at 2014-01-31 15:37:22
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log opened at 2014-01-31 16:19:17
+entity jpa --class ~.model.TrainingProgram --testAutomatically
+field string --fieldName name
+field set --fieldName courses --type ~.model.Course --cardinality ONE_TO_MANY --mappedBy trainingProgram
+focus --class ~.model.Course
+field reference --fieldName trainingProgram --type ~.model.TrainingProgram --cardinality MANY_TO_ONE
+entity jpa --class ~.model.Tag --testAutomatically
+field string --fieldName tag --sizeMin 1 --sizeMax 25 --notNull
+field string --fieldName description --sizeMax 250 --notNull
+field set --fieldName courses --type ~.model.Course --cardinality MANY_TO_MANY
+focus --class ~.model.Course
+field set --fieldName tags --type ~.model.Tag --cardinality MANY_TO_MANY --mappedBy courses
+entity jpa --class ~.model.Person --abstract --inheritanceType TABLE_PER_CLASS
+entity jpa --class ~.model.Student --extends ~.model.Person --testAutomatically
+entity jpa --class ~.model.Instructor --extends ~.model.Person --testAutomatically
+persistence setup --provider HIBERNATE --database MYSQL --databaseName coursemanager --userName su
+entity jpa --class ~.model.Offering --testAutomatically
+entity jpa --class ~.model.Registration --testAutomatically
+// [failed] database reverse engineer --schema coursemanager --includeTables "invoice payment" --package ~.model --testAutomatically
+osgi obr url add --url http://spring-roo-repository.springsource.org/repository.xml
+osgi obr start --bundleSymbolicName org.springframework.roo.wrapping.mysql-connector-java
+osgi obr url remove --url http://spring-roo-repository.springsource.org/repository.xml
+addon install id --searchResultId 01
+database reverse engineer --schema coursemanager --includeTables "invoice payment" --package ~.model --testAutomatically
+service type --interface ~.service.CourseService --entity ~.model.Course --useXmlConfiguration false 
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log closed at 2014-01-31 18:33:04
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log opened at 2014-02-01 12:58:08
+web mvc setup
+web mvc controller --class ~.web.TestDriveController
+web mvc scaffold --class ~.web.CourseController --backingType ~.model.Course
+persistence setup --provider HIBERNATE --database HYPERSONIC_PERSISTENT 
+persistence setup --provider HIBERNATE --database MYSQL --databaseName coursemanager --userName su
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log closed at 2014-02-03 10:14:57
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log opened at 2014-02-04 14:59:21
+web mvc scaffold --class ~.web.TrainingProgramController --backingType ~.model.TrainingProgram
+web mvc scaffold --class ~.web.TagController --backingType ~.model.Tag
+web mvc scaffold --class ~.web.InstructorController --backingType ~.model.Instructor
+web mvc scaffold --class ~.web.OfferingController --backingType ~.model.Offering
+web mvc scaffold --class ~.web.StudentController --backingType ~.model.Student
+web mvc scaffold --class ~.web.RegistrationController --backingType ~.model.Registration
+
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log closed at 2014-02-05 10:14:03
